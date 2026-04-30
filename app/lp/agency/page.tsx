@@ -22,7 +22,6 @@ import { CaseStudies } from "@/components/CaseStudies";
 import { ChannelChips } from "@/components/Chips";
 import { FAQ } from "@/components/FAQ";
 import { PreFormCta } from "@/components/PreFormCta";
-import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { StickyMobileCta } from "@/components/StickyMobileCta";
 import { VariantViewTracker } from "@/components/VariantViewTracker";
@@ -101,10 +100,6 @@ export default async function AgencyLp({
           accentWords={accentWords}
           subhead={subhead}
           ctaPrimary={{ label: "카톡으로 진단 받기", href: SITE.kakaoChannel }}
-          ctaSecondary={{
-            label: "폼으로 신청",
-            href: "#contact",
-          }}
           variantRef={variantRef}
           variantKey={variantKey}
         />
@@ -120,15 +115,6 @@ export default async function AgencyLp({
         />
         <FAQ items={faqItems} />
         <PreFormCta />
-        <ContactForm
-          variantRef={variantRef}
-          variantKey={variantKey}
-          hidden={{
-            lp_source: "agency",
-            channel,
-            intent,
-          }}
-        />
       </main>
       <Footer />
       <StickyMobileCta

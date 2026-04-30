@@ -15,7 +15,6 @@ export type CategoryContent = {
     accentWordsTemplate?: (loc: string) => string[];
     subhead: string;
     ctaPrimary: string;
-    ctaSecondary: string;
   };
   industryFAQs: FaqItem[];
   primaryKeywords: string[];
@@ -33,7 +32,6 @@ export const categoryContent: Record<string, CategoryContent> = {
       subhead:
         "치과 광고 계정·랜딩·문의 흐름을 진단하고, 신환 전환 구조까지 매주 개선합니다. 운영 현황은 광고주 전용 보드로 매일 공유합니다.",
       ctaPrimary: "카톡으로 진단 받기",
-      ctaSecondary: "폼으로 신청",
     },
     industryFAQs: [
       {
@@ -59,7 +57,6 @@ export const categoryContent: Record<string, CategoryContent> = {
       subhead:
         "병원 광고 계정·랜딩·예약 흐름을 진단하고, 진료과별 환자 전환 구조를 매주 개선합니다. 운영 현황은 광고주 전용 보드로 매일 공유합니다.",
       ctaPrimary: "카톡으로 진단 받기",
-      ctaSecondary: "폼으로 신청",
     },
     industryFAQs: [
       {
@@ -90,7 +87,6 @@ export const categoryContent: Record<string, CategoryContent> = {
         "인테리어 광고 계정·랜딩·견적 문의 흐름을 진단하고, 전환 구조를 매주 개선합니다. 운영 현황은 광고주 전용 보드로 매일 확인합니다.",
       // 소상공인/로컬 톤 — 직관적 표현
       ctaPrimary: "카톡으로 진단 받기",
-      ctaSecondary: "폼으로 신청",
     },
     industryFAQs: [
       {
@@ -119,7 +115,6 @@ export const categoryContent: Record<string, CategoryContent> = {
         "세무사 광고 계정·랜딩·상담 문의 흐름을 진단하고, 신규 거래처 전환 구조를 매주 개선합니다. 운영 현황은 광고주 전용 보드로 매일 확인합니다.",
       // 직관 톤 — 전문직 1인 사무소 대표 향
       ctaPrimary: "카톡으로 진단 받기",
-      ctaSecondary: "폼으로 신청",
     },
     industryFAQs: [
       {

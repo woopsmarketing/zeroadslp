@@ -10,8 +10,6 @@ type Props = {
   eyebrow?: string;
   /** primary = 카톡 채팅 직결 (메인 CTA). label 만 LP 별 카피로 변동 가능. */
   ctaPrimary: { label: string; href: string };
-  /** secondary = 폼 점프 (보조). 기본 #contact. */
-  ctaSecondary?: { label: string; href: string };
   /** GA4/dataLayer 추적용 */
   variantRef: string;
   variantKey: string;
@@ -29,7 +27,6 @@ export function Hero({
   subhead,
   eyebrow,
   ctaPrimary,
-  ctaSecondary,
   variantRef,
   variantKey,
 }: Props) {
@@ -51,7 +48,7 @@ export function Hero({
             <span>{SITE.brand}</span>
           </a>
           <a
-            href="#process"
+            href="#services"
             className="hidden text-sm font-medium text-ink-muted hover:text-ink sm:inline"
           >
             운영 방식 보기 →
@@ -74,7 +71,7 @@ export function Hero({
             {subhead}
           </p>
 
-          <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+          <div className="mt-2 flex flex-col items-center sm:flex-row">
             <KakaoCta
               href={ctaPrimary.href}
               variantRef={variantRef}
@@ -84,14 +81,6 @@ export function Hero({
               tone="primary"
               size="lg"
             />
-            {ctaSecondary ? (
-              <a
-                href={ctaSecondary.href}
-                className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full border border-line-strong bg-bg px-8 text-base font-bold tracking-tight text-ink transition hover:border-ink hover:bg-bg-soft hover:translate-y-[-1px]"
-              >
-                {ctaSecondary.label}
-              </a>
-            ) : null}
           </div>
 
           {/* CTA 직하 작은 보조 proof 줄 — 무거운 카드 없이 신뢰 시그널만 */}

@@ -46,16 +46,13 @@ export function PreFormCta() {
               target="_blank"
               rel="noopener noreferrer"
               data-placement="preform_kakao"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-accent px-8 text-base font-bold text-white shadow-[0_18px_40px_-12px_color-mix(in_oklab,var(--color-accent)_70%,transparent)] ring-1 ring-accent/20 transition hover:bg-accent-hover hover:translate-y-[-1px]"
+              className="inline-flex h-14 items-center justify-center rounded-full bg-accent px-9 text-lg font-bold tracking-tight text-white shadow-[0_18px_40px_-12px_color-mix(in_oklab,var(--color-accent)_70%,transparent)] ring-1 ring-accent/20 transition hover:bg-accent-hover hover:translate-y-[-2px]"
             >
               카톡으로 진단 받기
             </a>
-            <a
-              href="#contact"
-              className="text-xs font-medium text-ink-subtle underline-offset-4 hover:text-ink hover:underline"
-            >
-              또는 폼 작성 ↓
-            </a>
+            <p className="text-xs text-ink-subtle">
+              카톡 채널 1:1 채팅창이 바로 열립니다
+            </p>
           </div>
         </div>
       </div>

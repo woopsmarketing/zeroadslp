@@ -18,7 +18,6 @@ import { CaseStudies } from "@/components/CaseStudies";
 import { IndustryChips } from "@/components/Chips";
 import { FAQ } from "@/components/FAQ";
 import { PreFormCta } from "@/components/PreFormCta";
-import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { StickyMobileCta } from "@/components/StickyMobileCta";
 import { VariantViewTracker } from "@/components/VariantViewTracker";
@@ -106,10 +105,6 @@ export default async function IndustryLp({
           accentWords={accentWords}
           subhead={c.hero.subhead}
           ctaPrimary={{ label: c.hero.ctaPrimary, href: SITE.kakaoChannel }}
-          ctaSecondary={{
-            label: c.hero.ctaSecondary,
-            href: "#contact",
-          }}
           variantRef={variantRef}
           variantKey={variantKey}
         />
@@ -125,15 +120,6 @@ export default async function IndustryLp({
         />
         <FAQ items={faqItems} />
         <PreFormCta />
-        <ContactForm
-          variantRef={variantRef}
-          variantKey={variantKey}
-          hidden={{
-            lp_source: "industry",
-            category: c.slug,
-            loc,
-          }}
-        />
       </main>
       <Footer />
       <StickyMobileCta

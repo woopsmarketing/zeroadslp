@@ -262,9 +262,9 @@ const tests = [
     },
   },
 
-  // ── 폼 / API ──
+  // ── 폼 100% 제거 정책 검증 (카톡 메인 단일화) ──
   {
-    name: "모든 LP 에 ContactForm (id='contact') 마운트",
+    name: "폼 컴포넌트 완전 제거 — 모든 LP 에 ContactForm/입력 필드 부재",
     fn: async () => {
       for (const p of [
         "/",
@@ -275,71 +275,33 @@ const tests = [
         "/lp/agency",
       ]) {
         const html = await getPage(p);
-        assert.ok(
-          html.includes('id="contact"') || html.includes("id='contact'"),
-          `${p}: contact form 누락`
-        );
+        assert.ok(!html.includes('id="contact"'), `${p}: 폼 anchor 잔존`);
+        assert.ok(!html.includes('name="name"'), `${p}: name input 잔존`);
+        assert.ok(!html.includes('name="phone"'), `${p}: phone input 잔존`);
+        assert.ok(!html.includes('name="business"'), `${p}: business input 잔존`);
       }
     },
   },
   {
-    name: "POST /api/lead — 필수 누락시 400",
+    name: "/api/lead 라우트 완전 제거 (404)",
     fn: async () => {
-      const r = await postJson("/api/lead", { name: "테스트" });
-      assert.equal(r.status, 400);
-      assert.ok(r.body.error, "error 응답 누락");
+      const r = await fetch(`${BASE}/api/lead`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: "테스트" }),
+      });
+      assert.equal(r.status, 404, `expected 404 got ${r.status}`);
     },
   },
   {
-    name: "POST /api/lead — consent 누락시 400 (4필드 모드)",
+    name: "/thanks 라우트 완전 제거 (404)",
     fn: async () => {
-      const r = await postJson("/api/lead", {
-        name: "테스트",
-        phone: "010-1234-5678",
-        business: "치과",
-      });
-      assert.equal(r.status, 400);
-      assert.equal(r.body.error, "missing_consent");
-    },
-  },
-  {
-    name: "POST /api/lead — business 누락시 400 (필수)",
-    fn: async () => {
-      const r = await postJson("/api/lead", {
-        name: "테스트",
-        phone: "010-1234-5678",
-        consent: "yes",
-        // business 누락
-      });
-      assert.equal(r.status, 400);
-      assert.equal(r.body.error, "missing_required_fields");
-    },
-  },
-  {
-    name: "POST /api/lead — 성공시 200 + id (4필드)",
-    fn: async () => {
-      const r = await postJson("/api/lead", {
-        name: "테스트",
-        phone: "010-1234-5678",
-        business: "치과",
-        site_url: "https://example.com",
-        consent: "yes",
-        lp_source: "industry",
-        category: "dental",
-      });
-      assert.equal(r.status, 200);
-      assert.ok(r.body.id, "id 누락");
+      const r = await fetch(`${BASE}/thanks`);
+      assert.equal(r.status, 404, `expected 404 got ${r.status}`);
     },
   },
 
   // ── 정책/SEO ──
-  {
-    name: "/thanks 페이지 정상",
-    fn: async () => {
-      const html = await getPage("/thanks");
-      assert.ok(html.includes("신청이 접수되었습니다"), "thanks 메시지 누락");
-    },
-  },
   {
     name: "/privacy 200",
     fn: async () => {
@@ -420,26 +382,16 @@ const tests = [
   },
 
   // ── 추적 / hidden field ──
-  // 정책: 서버에서 가공된 값(loc 한글, lp_source, category, channel, intent)만 hidden 으로 박음.
-  // raw URL 파라미터(gclid/utm_*/matchtype/device/loc_physical 등)는 client collectAuto() 가
-  // 폼 제출시 fresh 캡처해서 흘림. 서버 hidden 중복하지 않음.
+  // 폼 제거 후 — hidden field 검증 X. loc_physical → 한글 변환은 헤드라인에서만 검증.
   {
-    name: "LP-A hidden field — 서버 가공 값(loc 한글, category)만 박힘",
+    name: "LP-A loc_physical → Hero 헤드라인 한글 위치 반영",
     fn: async () => {
       const html = await getPage(
         "/lp/industry/dental?loc_physical=1009871&utm_term=치과&gclid=ABC123"
       );
       assert.ok(
-        html.includes('name="loc" value="서울"'),
-        "loc 한글 변환 hidden 누락"
-      );
-      assert.ok(
-        html.includes('name="category" value="dental"'),
-        "category hidden 누락"
-      );
-      assert.ok(
-        html.includes('name="lp_source" value="industry"'),
-        "lp_source hidden 누락"
+        html.includes("서울 치과 마케팅"),
+        "loc_physical → Hero 한글 변환 미작동"
       );
     },
   },
@@ -466,10 +418,6 @@ const tests = [
       assert.ok(
         html.includes("모르고 계셨나요?"),
         "problem 헤드라인 스위칭 미작동"
-      );
-      assert.ok(
-        html.includes('name="intent" value="problem"'),
-        "intent hidden 누락"
       );
     },
   },
@@ -728,55 +676,17 @@ const tests = [
     },
   },
   {
-    name: "ContactForm 4필드 모드 — ad_status / message / budget 제거 (카톡 메인)",
-    fn: async () => {
-      const html = await getPage("/");
-      // 유지 필드
-      assert.ok(html.includes('name="name"'), "name 필드 누락");
-      assert.ok(html.includes('name="phone"'), "phone 필드 누락");
-      assert.ok(html.includes('name="business"'), "business 필드 누락");
-      assert.ok(html.includes('name="site_url"'), "site_url 필드 누락");
-      assert.ok(html.includes('name="consent"'), "consent 필드 누락");
-      // 제거된 필드 (4필드 간소화)
-      assert.ok(!html.includes('name="ad_status"'), "ad_status 필드 잔존");
-      assert.ok(!html.includes('name="message"'), "message 필드 잔존");
-      assert.ok(!html.includes('name="budget"'), "budget 필드 잔존");
-      assert.ok(!html.includes('name="email"'), "이메일 필드 잔존");
-      assert.ok(!html.includes('name="region"'), "지역 필드 잔존");
-      assert.ok(!html.includes('name="marketing"'), "마케팅 동의 잔존");
-      // 폼 위 카톡 인라인 안내
-      assert.ok(
-        html.includes("카톡으로 바로 진단 받기"),
-        "폼 위 카톡 인라인 안내 누락"
-      );
-    },
-  },
-  {
-    name: "ContactForm 헤드라인 — '30분 안에 진단'",
-    fn: async () => {
-      const html = await getPage("/");
-      assert.ok(
-        html.includes("30분 안에 진단"),
-        "폼 헤드라인 30분 톤 누락"
-      );
-      assert.ok(
-        html.includes("30분 무료 진단 신청"),
-        "폼 submit 버튼 카피 미일치"
-      );
-    },
-  },
-  {
-    name: "Sticky mobile CTA — 폼 + 카톡 2버튼 분기",
+    name: "Sticky mobile CTA — 카톡 only (폼 버튼 제거)",
     fn: async () => {
       for (const p of ["/", "/lp/industry/dental", "/lp/agency"]) {
         const html = await getPage(p);
         assert.ok(
-          html.includes('data-placement="sticky_mobile_form"'),
-          `${p}: sticky 폼 jump 누락`
+          html.includes('data-placement="sticky_mobile_kakao"'),
+          `${p}: sticky 카톡 버튼 누락`
         );
         assert.ok(
-          html.includes('data-placement="sticky_mobile_kakao"'),
-          `${p}: sticky 카톡 누락`
+          !html.includes('data-placement="sticky_mobile_form"'),
+          `${p}: sticky 폼 버튼 잔존 (제거됐어야 함)`
         );
       }
     },

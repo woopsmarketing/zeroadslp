@@ -12,7 +12,6 @@ import { ServicesFlow } from "@/components/ServicesFlow";
 import { CaseStudies } from "@/components/CaseStudies";
 import { FAQ } from "@/components/FAQ";
 import { PreFormCta } from "@/components/PreFormCta";
-import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { StickyMobileCta } from "@/components/StickyMobileCta";
 import { JsonLd } from "@/components/JsonLd";
@@ -41,10 +40,6 @@ export default function Home() {
           accentWords={["광고비 새는 구멍을 찾고"]}
           subhead="광고 계정·GA4·GTM·랜딩페이지·문의 흐름까지 진단하고 매주 개선합니다. 운영 현황은 광고주 전용 보드 공유 URL로 매일 직접 확인합니다."
           ctaPrimary={{ label: "카톡으로 진단 받기", href: SITE.kakaoChannel }}
-          ctaSecondary={{
-            label: "폼으로 신청",
-            href: "#contact",
-          }}
           variantRef={variantRef}
           variantKey={variantKey}
         />
@@ -112,11 +107,6 @@ export default function Home() {
 
         <FAQ items={sharedContent.commonFAQs} />
         <PreFormCta />
-        <ContactForm
-          variantRef={variantRef}
-          variantKey={variantKey}
-          hidden={{ lp_source: "home" }}
-        />
       </main>
       <Footer />
       <StickyMobileCta
