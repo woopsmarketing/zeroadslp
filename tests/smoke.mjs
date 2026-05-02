@@ -177,10 +177,31 @@ const tests = [
     },
   },
   {
-    name: "/lp/industry/dental?loc=1011554 → '강남구 치과 마케팅'",
+    name: "/lp/industry/dental?loc=9197620 → '강남구 치과 마케팅' (Google Ads 진짜 ID)",
     fn: async () => {
-      const html = await getPage("/lp/industry/dental?loc=1011554");
-      assert.ok(html.includes("강남구 치과 마케팅"), "강남구 매핑 미작동");
+      const html = await getPage("/lp/industry/dental?loc=9197620");
+      assert.ok(html.includes("강남구 치과 마케팅"), "강남구(9197620) 매핑 미작동");
+    },
+  },
+  {
+    name: "/lp/industry/dental?loc_physical_ms=9196236 → '달서구 치과 마케팅' (대구)",
+    fn: async () => {
+      const html = await getPage("/lp/industry/dental?loc_physical_ms=9196236");
+      assert.ok(html.includes("달서구 치과 마케팅"), "달서구(9196236) 매핑 미작동");
+    },
+  },
+  {
+    name: "/lp/industry/dental?loc_physical_ms=1009879 → '대구 치과 마케팅' (City)",
+    fn: async () => {
+      const html = await getPage("/lp/industry/dental?loc_physical_ms=1009879");
+      assert.ok(html.includes("대구 치과 마케팅"), "대구(1009879) City 매핑 미작동");
+    },
+  },
+  {
+    name: "/lp/industry/dental?loc_physical_ms=21320 → '대구 치과 마케팅' (Region)",
+    fn: async () => {
+      const html = await getPage("/lp/industry/dental?loc_physical_ms=21320");
+      assert.ok(html.includes("대구 치과 마케팅"), "대구(21320) Region 매핑 미작동");
     },
   },
   {
@@ -396,29 +417,32 @@ const tests = [
     },
   },
   {
-    name: "LP-A 위치 fallback 순서: loc_physical_ms → loc_physical → loc_interest_ms → loc_interest → legacy loc",
+    name: "LP-A 위치 fallback 순서 (진짜 Google Ads ID 사용)",
     fn: async () => {
+      // 진짜 Google Ads ID:
+      //   서울=1009871(City)/21318(Region), 부산=1009866/21319, 대구=1009879/21320
+      //   강남구=9197620, 달서구=9196236
       // 0. ValueTrack 표준 토큰(_ms) 인식 — 광고에서 진짜 박히는 형태
-      let html = await getPage("/lp/industry/dental?loc_physical_ms=1011554");
+      let html = await getPage("/lp/industry/dental?loc_physical_ms=9197620");
       assert.ok(
         html.includes("강남구 치과 마케팅"),
         "★ loc_physical_ms (Google Ads 표준) 인식 안됨"
       );
       // 1. loc_physical_ms 가 가장 우선
       html = await getPage(
-        "/lp/industry/dental?loc_physical_ms=1009871&loc_physical=1009872&loc_interest=1009873"
+        "/lp/industry/dental?loc_physical_ms=1009871&loc_physical=1009866&loc_interest=1009879"
       );
       assert.ok(html.includes("서울 치과 마케팅"), "loc_physical_ms 최우선 적용 안됨");
       // 2. loc_physical_ms 없으면 loc_physical
       html = await getPage(
-        "/lp/industry/dental?loc_physical=1009872&loc_interest=1009871&loc=1009873"
+        "/lp/industry/dental?loc_physical=1009866&loc_interest=1009871&loc=1009879"
       );
       assert.ok(html.includes("부산 치과 마케팅"), "loc_physical 2순위 적용 안됨");
       // 3. loc_interest_ms 도 인식
-      html = await getPage("/lp/industry/dental?loc_interest_ms=1009873");
+      html = await getPage("/lp/industry/dental?loc_interest_ms=1009879");
       assert.ok(html.includes("대구 치과 마케팅"), "loc_interest_ms fallback 미작동");
       // 4. loc_interest fallback
-      html = await getPage("/lp/industry/dental?loc_interest=1009873");
+      html = await getPage("/lp/industry/dental?loc_interest=1009879");
       assert.ok(html.includes("대구 치과 마케팅"), "loc_interest fallback 미작동");
       // 5. legacy loc fallback
       html = await getPage("/lp/industry/dental?loc=1009871");
