@@ -25,7 +25,10 @@ import { JsonLd } from "@/components/JsonLd";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{
-  // ValueTrack (Google Ads 표준)
+  // ValueTrack (Google Ads 표준 — _ms 접미사가 정확한 토큰)
+  loc_physical_ms?: string | string[];
+  loc_interest_ms?: string | string[];
+  // 호환: _ms 없는 형태 (수동 박은 케이스 — 폐기 예정)
   loc_physical?: string | string[];
   loc_interest?: string | string[];
   matchtype?: string | string[];
@@ -59,8 +62,14 @@ export async function generateMetadata({
   const c = categoryContent[slug as CategorySlug];
   if (!c) return {};
   const sp = await searchParams;
-  // 위치는 loc_physical 우선, 없으면 loc_interest, 그래도 없으면 legacy loc
-  const loc = fallbackLocation(sp.loc_physical ?? sp.loc_interest ?? sp.loc);
+  // 위치 우선순위: ValueTrack 표준(_ms) → 수동 박은 형태 → legacy loc
+  const loc = fallbackLocation(
+    sp.loc_physical_ms ??
+      sp.loc_physical ??
+      sp.loc_interest_ms ??
+      sp.loc_interest ??
+      sp.loc
+  );
   const headline = c.hero.headlineTemplate(loc);
   return {
     title: headline,
@@ -83,10 +92,15 @@ export default async function IndustryLp({
   if (!c) notFound();
 
   const sp = await searchParams;
-  // 위치 ID(loc_physical/loc_interest/legacy loc) → location-map.ts 로 한글 변환.
-  // 다른 raw URL 파라미터(utm_*/matchtype/device/gclid)는 client collectAuto() 가
-  // 폼 제출시 window.location 에서 fresh 캡처하므로 page 단에서 hidden 으로 박을 필요 없음.
-  const loc = fallbackLocation(sp.loc_physical ?? sp.loc_interest ?? sp.loc);
+  // 위치 ID 우선순위: ValueTrack 표준(_ms) → _ms 없는 형태 → legacy loc.
+  // {loc_physical_ms} / {loc_interest_ms} 가 Google Ads 정확 토큰. 양쪽 호환 유지.
+  const loc = fallbackLocation(
+    sp.loc_physical_ms ??
+      sp.loc_physical ??
+      sp.loc_interest_ms ??
+      sp.loc_interest ??
+      sp.loc
+  );
 
   const headline = c.hero.headlineTemplate(loc);
   const accentWords = c.hero.accentWordsTemplate?.(loc);

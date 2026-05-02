@@ -2,6 +2,7 @@ import { SITE } from "@/shared/site";
 import { highlightHeadline } from "@/lib/highlight";
 import { Section } from "./Section";
 import { KakaoCta } from "./KakaoCta";
+import { Logo } from "./Logo";
 
 type Props = {
   headline: string;
@@ -37,15 +38,8 @@ export function Hero({
     >
       <div className="flex flex-col gap-12 sm:gap-14">
         <header className="flex items-center justify-between">
-          <a
-            href="/"
-            className="flex items-center gap-2 text-base font-bold tracking-tight"
-          >
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-full bg-accent"
-              aria-hidden
-            />
-            <span>{SITE.brand}</span>
+          <a href="/" aria-label={SITE.brand}>
+            <Logo />
           </a>
           <a
             href="#services"

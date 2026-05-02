@@ -1,5 +1,6 @@
 import { SITE } from "@/shared/site";
 import { Section } from "./Section";
+import { Logo } from "./Logo";
 
 const PLACEHOLDER = "준비 중";
 
@@ -9,13 +10,7 @@ export function Footer() {
       <Section className="py-14 sm:py-16">
         <div className="flex flex-col gap-12">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 text-base font-bold tracking-tight text-ink">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full bg-accent"
-                aria-hidden
-              />
-              <span>{SITE.brand}</span>
-            </div>
+            <Logo className="text-ink" />
             <p className="max-w-xl text-sm leading-relaxed text-ink-muted">
               매일 보는 검색광고 운영. 구글·네이버 검색광고 전문 대행.
             </p>

@@ -30,7 +30,10 @@ import { JsonLd } from "@/components/JsonLd";
 type SearchParams = Promise<{
   ch?: string | string[];
   intent?: string | string[];
-  // ValueTrack (Google Ads 표준)
+  // ValueTrack (Google Ads 표준 — _ms 가 정확 토큰)
+  loc_physical_ms?: string | string[];
+  loc_interest_ms?: string | string[];
+  // 호환: _ms 없는 형태
   loc_physical?: string | string[];
   loc_interest?: string | string[];
   matchtype?: string | string[];
